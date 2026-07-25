@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Опис знімка · ЛОР</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Опис знімка &middot; ЛОР</h1>
+    <div class="sub">позначте знахідки — текст складеться сам</div>
+  </div>
+  <span class="spacer"></span>
+  <button class="ghost" id="helpbtn" aria-expanded="false">Як користуватися</button>
+</header>
+
+<div class="help" id="help">
+  <ol>
+    <li>Заповніть <b>дані пацієнта</b> у правій панелі — вони підуть у бланк.</li>
+    <li>На вкладці <b>«Опис»</b> позначте знахідки. Де у фразі є <b>…сторона</b> або жовте поле —
+        оберіть сторону і впишіть число; позначка поставиться автоматично.</li>
+    <li>На вкладці <b>«Висновок»</b> оберіть діагнози — вони зберуться у рядок
+        «Ознаки: …». Якщо там нічого не обрано, висновок збереться автоматично з опису.</li>
+    <li><b>«Зберегти .docx»</b> завантажує готовий протокол у Word, <b>«Друк»</b> одразу
+        друкує бланк А4.</li>
+    <li>Пошук угорі шукає по активній вкладці, перемикач <b>Рентген / КТ</b> ховає зайве,
+        <b>«Лише позначені»</b> показує тільки обране — зручно перевірити себе перед друком.</li>
+  </ol>
+  <p class="note">Дані пацієнта нікуди не надсилаються: сторінка працює цілком у вашому браузері,
+    навіть без інтернету. Після закриття вкладки введене не зберігається.</p>
+</div>
+
+<div class="wrap">
+<main>
+  <div class="tabs" role="tablist">
+    <button id="tab-desc" role="tab" aria-selected="true">Опис <span class="tally" id="tally-desc"></span></button>
+    <button id="tab-dx" role="tab" aria-selected="false">Висновок <span class="tally" id="tally-dx"></span></button>
+  </div>
+
+  <div class="toolbar">
+    <input id="q" type="search" placeholder="Пошук…" autocomplete="off">
+    <div class="seg" id="modseg" role="group" aria-label="Модальність">
+      <button data-mod="all" aria-pressed="true">Усі</button>
+      <button data-mod="Rg" aria-pressed="false">Рентген</button>
+      <button data-mod="КТ" aria-pressed="false">КТ</button>
+    </div>
+    <button class="btn" id="only">Лише позначені</button>
+    <button class="btn" id="collapse">Згорнути все</button>
+    <button class="btn warn" id="clear">Очистити</button>
+  </div>
+
+  <div id="list"></div>
+</main>
+
+<aside>
+  <details class="blank" open>
+    <summary>Дані для бланка</summary>
+    <div class="grid">
+      <label class="wide">Пацієнт (ПІБ)<input id="f_name" type="text"></label>
+      <label>Дата народження / вік<input id="f_birth" type="text"></label>
+      <label>№ знімка<input id="f_num" type="text"></label>
+      <label>Дата дослідження<input id="f_date" type="text"></label>
+      <label>Направив<input id="f_ref" type="text"></label>
+      <label class="wide">Вид дослідження, проєкція<input id="f_study" type="text"></label>
+      <label class="wide">Лікар-рентгенолог<input id="f_doc" type="text"></label>
+    </div>
+  </details>
+
+  <div class="pane-head">
+    <strong>Протокол</strong>
+    <span class="count" id="cnt">0 позначок</span>
+  </div>
+  <div class="pv-body" id="pv"></div>
+  <div class="actions">
+    <button class="btn primary" id="savedocx">Зберегти .docx</button>
+    <button class="btn" id="print">Друк</button>
+    <button class="btn" data-copy="desc">Копіювати опис</button>
+    <button class="btn" data-copy="concl">Копіювати висновок</button>
+  </div>
+  <div class="hint">Файл .docx формується у вашому браузері й відкривається у Word —
+    його ще можна доправити руками перед друком.</div>
+</aside>
+</div>
+
+<div class="print-doc" id="printdoc"></div>
+<div class="toast" id="toast"></div>
+
+<script src="data-phrases.js"></script>
+<script src="data-diagnoses.js"></script>
+<script src="docxgen.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
