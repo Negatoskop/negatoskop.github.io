@@ -12,6 +12,8 @@
 
   var tab = 'desc', mod = 'all', q = '', onlyChecked = false;
 
+  var CLINIC = 'КНП «МКЛ №27» ХМР, вул. Гуданова, 5-7';
+
   var $ = function (id) { return document.getElementById(id); };
   var V = function (id) { return ($(id).value || '').trim(); };
 
@@ -27,9 +29,21 @@
   }
 
   // ── збірка тексту ────────────────────────────────────────
+  // Проєкція/модальність — це шапка бланка, а не речення опису,
+  // тому ці фрази виносяться в окремий рядок і в тіло опису не потрапляють.
+  function isStudy(p) { return p.block === BL[0] && p.group === 'Проекція'; }
+
+  function studyLine() {
+    var out = [];
+    PH.forEach(function (p, i) {
+      if (ps[i].on && isStudy(p)) out.push(fill(p.text, ps[i]).replace(/\.$/, ''));
+    });
+    return out.join('; ');
+  }
+
   function description() {
     var out = [];
-    PH.forEach(function (p, i) { if (ps[i].on) out.push(fill(p.text, ps[i])); });
+    PH.forEach(function (p, i) { if (ps[i].on && !isStudy(p)) out.push(fill(p.text, ps[i])); });
     return out.join(' ');
   }
 
@@ -166,11 +180,13 @@
     t2.textContent = nd; t2.className = 'tally' + (nd ? ' on' : '');
     $('cnt').textContent = plural(np + nd);
 
+    var study = studyLine();
     $('pv').innerHTML =
-      '<div class="sect"><h3>Опис</h3>'
-      + (d ? esc(d) : '<span class="empty">Позначте знахідки на вкладці «Опис».</span>') + '</div>'
+      (study ? '<div class="sect"><h3>Дослідження</h3><div class="body">' + esc(study) + '</div></div>' : '')
+      + '<div class="sect"><h3>Опис</h3><div class="body">'
+      + (d ? esc(d) : '<span class="empty">Позначте знахідки на вкладці «Опис».</span>') + '</div></div>'
       + '<div class="sect"><h3>Висновок' + (c.src ? ' <em>· ' + c.src + '</em>' : '') + '</h3>'
-      + (c.text ? esc(c.text) : '<span class="empty">—</span>') + '</div>';
+      + '<div class="body">' + (c.text ? esc(c.text) : '<span class="empty">—</span>') + '</div></div>';
     updateBadges();
   }
 
@@ -254,8 +270,8 @@
 
   function blankFields() {
     return {
-      name: V('f_name'), birth: V('f_birth'), num: V('f_num'), date: V('f_date'),
-      study: V('f_study'), referrer: V('f_ref'), doctor: V('f_doc')
+      name: V('f_name'), age: V('f_age'), num: V('f_num'), date: V('f_date'),
+      study: studyLine(), referrer: V('f_ref'), doctor: V('f_doc')
     };
   }
 
@@ -277,24 +293,29 @@
 
   $('print').addEventListener('click', function () {
     var o = blankFields();
-    var rows = [['Пацієнт (ПІБ)', o.name], ['Дата народження / вік', o.birth],
+    var rows = [['Пацієнт (ПІБ)', o.name], ['Вік (повних років)', o.age],
                 ['№ знімка / дослідження', o.num], ['Дата дослідження', o.date],
                 ['Вид дослідження, проєкція', o.study], ['Направив', o.referrer]];
     $('printdoc').innerHTML =
-      '<h2>ПРОТОКОЛ РЕНТГЕНОЛОГІЧНОГО ДОСЛІДЖЕННЯ</h2>'
+      '<div class="letterhead">' + CLINIC + '<br>Рентген-діагностичний кабінет</div>'
+      + '<h2>ПРОТОКОЛ РЕНТГЕНОЛОГІЧНОГО ДОСЛІДЖЕННЯ</h2>'
       + '<div class="cap">навколоносові пазухи &middot; порожнина носа &middot; носоглотка &middot; скроневі кістки</div>'
       + '<table>' + rows.filter(function (r) { return r[1] || r[0].indexOf('Пацієнт') === 0; })
         .map(function (r) { return '<tr><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td></tr>'; }).join('')
       + '</table>'
-      + '<h3>Опис</h3><div>' + esc(description()) + '</div>'
-      + '<h3>Висновок</h3><div>' + esc(conclusion().text) + '</div>'
-      + '<div class="sign"><span>Лікар-рентгенолог ____________________</span><span>'
-      + (esc(o.doctor) || '_________________________')
-      + '<br><span style="font-size:9pt">(підпис, прізвище)</span></span></div>';
+      + '<h3>Опис</h3><div class="body">' + esc(description()) + '</div>'
+      + '<h3>Висновок</h3><div class="body">' + esc(conclusion().text) + '</div>'
+      + '<p class="dateline">Дата: «____» ____________ 20____ р.</p>'
+      + '<table class="sign"><tr><td>Лікар-рентгенолог</td><td class="c">____________________</td>'
+      + '<td class="r">' + (esc(o.doctor) || '____________________') + '</td></tr>'
+      + '<tr><td>М. П.</td><td class="c small">(підпис)</td>'
+      + '<td class="r small">(прізвище, ініціали)</td></tr></table>';
     window.print();
   });
 
-  $('f_date').value = new Date().toLocaleDateString('uk-UA');
+  var today = new Date();
+  var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+  $('f_date').value = pad(today.getDate()) + '.' + pad(today.getMonth() + 1) + '.' + today.getFullYear();
   switchTab('desc');
   updatePreview();
 })();

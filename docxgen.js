@@ -122,11 +122,41 @@
       + body + '</w:tbl>';
   }
 
-  /* opts: {clinic, name, birth, num, date, study, referrer, desc, concl, doctor} */
+  var CLINIC = 'КНП «МКЛ №27» ХМР, вул. Гуданова, 5-7';
+
+  // Підпис у три колонки: ліворуч місце печатки, посередині лінія підпису,
+  // праворуч прізвище. Рамки приховані.
+  function signTable(doctor) {
+    var W = [3100, 3300, 3238];
+    function c(text, w, o) {
+      o = o || {};
+      return '<w:tc><w:tcPr><w:tcW w:w="' + w + '" w:type="dxa"/></w:tcPr>'
+        + P(text, { size: o.size || 24, align: o.align, color: o.color, after: 0 }) + '</w:tc>';
+    }
+    var small = { size: 18, color: '666666' };
+    return '<w:tbl><w:tblPr><w:tblW w:w="9638" w:type="dxa"/><w:tblBorders>'
+      + ['top', 'left', 'bottom', 'right', 'insideH', 'insideV'].map(function (s) {
+          return '<w:' + s + ' w:val="none" w:sz="0" w:space="0" w:color="auto"/>';
+        }).join('')
+      + '</w:tblBorders><w:tblCellMar><w:left w:w="0" w:type="dxa"/>'
+      + '<w:right w:w="0" w:type="dxa"/></w:tblCellMar></w:tblPr>'
+      + '<w:tblGrid>' + W.map(function (w) { return '<w:gridCol w:w="' + w + '"/>'; }).join('') + '</w:tblGrid>'
+      + '<w:tr>'
+        + c('Лікар-рентгенолог', W[0])
+        + c('____________________', W[1], { align: 'center' })
+        + c(doctor || '____________________', W[2], { align: 'right' })
+      + '</w:tr><w:tr>'
+        + c('М. П.', W[0])
+        + c('(підпис)', W[1], { align: 'center', size: small.size, color: small.color })
+        + c('(прізвище, ініціали)', W[2], { align: 'right', size: small.size, color: small.color })
+      + '</w:tr></w:tbl>';
+  }
+
+  /* opts: {clinic, name, age, num, date, study, referrer, desc, concl, doctor} */
   function documentXml(o) {
     var rows = [
       ['Пацієнт (ПІБ)', o.name],
-      ['Дата народження / вік', o.birth],
+      ['Вік (повних років)', o.age],
       ['№ знімка / дослідження', o.num],
       ['Дата дослідження', o.date],
       ['Вид дослідження, проєкція', o.study],
@@ -134,9 +164,8 @@
     ].filter(function (r) { return r[1] || ['Пацієнт (ПІБ)', '№ знімка / дослідження', 'Дата дослідження'].indexOf(r[0]) >= 0; });
 
     var body = ''
-      + P(o.clinic || 'Заклад охорони здоров\u2019я: ______________________________________________',
-          { size: 20, color: '444444', after: 60 })
-      + P('Рентгенологічний кабінет', { size: 20, color: '444444', after: 240 })
+      + P(o.clinic || CLINIC, { size: 20, color: '444444', after: 40 })
+      + P('Рентген-діагностичний кабінет', { size: 20, color: '444444', after: 240 })
       + P('ПРОТОКОЛ РЕНТГЕНОЛОГІЧНОГО ДОСЛІДЖЕННЯ',
           { bold: true, align: 'center', size: 28, after: 40 })
       + P('навколоносові пазухи · порожнина носа · носоглотка · скроневі кістки',
@@ -144,13 +173,11 @@
       + infoTable(rows)
       + P('', { after: 160 })
       + P('ОПИС:', { bold: true, after: 60 })
-      + P(o.desc || '', { after: 200 })
+      + P(o.desc || '', { align: 'both', after: 200 })
       + P('ВИСНОВОК:', { bold: true, after: 60 })
-      + P(o.concl || '', { after: 400 })
-      + P(['Дата: «____» ____________ 20____ р.', '\t', 'М. П.'], { tabRight: true, after: 360 })
-      + P(['Лікар-рентгенолог  ____________________', '\t',
-           (o.doctor || '____________________________')], { tabRight: true, after: 0 })
-      + P(['(підпис)', '\t', '(прізвище, ініціали)'], { tabRight: true, size: 18, color: '666666' })
+      + P(o.concl || '', { align: 'both', after: 400 })
+      + P('Дата: «____» ____________ 20____ р.', { after: 320 })
+      + signTable(o.doctor)
       + '<w:sectPr><w:pgSz w:w="11906" w:h="16838"/>'
       + '<w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134" '
       + 'w:header="708" w:footer="708" w:gutter="0"/></w:sectPr>';

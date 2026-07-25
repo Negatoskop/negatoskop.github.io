@@ -1,0 +1,16 @@
+{
+  "name": "Опис знімка · ЛОР",
+  "short_name": "Опис знімка",
+  "lang": "uk",
+  "description": "Складання протоколів рентгенологічних досліджень ЛОР-органів",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#fbfbf9",
+  "theme_color": "#12242e",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

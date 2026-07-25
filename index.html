@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Опис знімка · ЛОР</title>
+<link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<meta name="theme-color" content="#12242e">
 <link rel="stylesheet" href="app.css">
 </head>
 <body>
@@ -19,7 +23,7 @@
 
 <div class="help" id="help">
   <ol>
-    <li>Заповніть <b>дані пацієнта</b> у правій панелі — вони підуть у бланк.</li>
+    <li>Заповніть <b>дані пацієнта</b> у правій панелі — вони підуть у бланк. Вид дослідження туди потрапляє сам, із позначки в розділі «Умови дослідження».</li>
     <li>На вкладці <b>«Опис»</b> позначте знахідки. Де у фразі є <b>…сторона</b> або жовте поле —
         оберіть сторону і впишіть число; позначка поставиться автоматично.</li>
     <li>На вкладці <b>«Висновок»</b> оберіть діагнози — вони зберуться у рядок
@@ -60,12 +64,11 @@
     <summary>Дані для бланка</summary>
     <div class="grid">
       <label class="wide">Пацієнт (ПІБ)<input id="f_name" type="text"></label>
-      <label>Дата народження / вік<input id="f_birth" type="text"></label>
+      <label>Вік (повних років)<input id="f_age" type="text" inputmode="numeric"></label>
       <label>№ знімка<input id="f_num" type="text"></label>
       <label>Дата дослідження<input id="f_date" type="text"></label>
       <label>Направив<input id="f_ref" type="text"></label>
-      <label class="wide">Вид дослідження, проєкція<input id="f_study" type="text"></label>
-      <label class="wide">Лікар-рентгенолог<input id="f_doc" type="text"></label>
+      <label class="wide">Лікар-рентгенолог<input id="f_doc" type="text" value="Долгарєв О.М."></label>
     </div>
   </details>
 
