@@ -1,5 +1,5 @@
 /* Створення .docx у браузері без жодних бібліотек.
-   .docx — це ZIP з кількох XML-файлів; тут є мінімальний ZIP-writer (метод "store")
+   .docx - це ZIP з кількох XML-файлів; тут є мінімальний ZIP-writer (метод "store")
    і генератор WordprocessingML. Працює офлайн, нічого нікуди не надсилає. */
 (function (global) {
   'use strict';
