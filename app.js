@@ -298,8 +298,7 @@
                 ['Вид дослідження, проєкція', o.study], ['Направив', o.referrer]];
     $('printdoc').innerHTML =
       '<div class="letterhead">' + CLINIC + '<br>Рентген-діагностичний кабінет</div>'
-      + '<h2>ПРОТОКОЛ РЕНТГЕНОЛОГІЧНОГО ДОСЛІДЖЕННЯ</h2>'
-      + '<div class="cap">навколоносові пазухи &middot; порожнина носа &middot; носоглотка &middot; скроневі кістки</div>'
+      + '<h2>ПРОТОКОЛ ДОСЛІДЖЕННЯ</h2>'
       + '<table>' + rows.filter(function (r) { return r[1] || r[0].indexOf('Пацієнт') === 0; })
         .map(function (r) { return '<tr><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td></tr>'; }).join('')
       + '</table>'
