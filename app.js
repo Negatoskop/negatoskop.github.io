@@ -1,4 +1,4 @@
-/* Логіка форми. Дані — у data-phrases.js та data-diagnoses.js, Word — у docxgen.js.
+/* Логіка форми. Дані - у data-phrases.js та data-diagnoses.js, Word - у docxgen.js.
    Тут нічого правити не потрібно, щоб додати чи змінити фразу. */
 (function () {
   'use strict';
@@ -29,7 +29,7 @@
   }
 
   // ── збірка тексту ────────────────────────────────────────
-  // Проєкція/модальність — це шапка бланка, а не речення опису,
+  // Проєкція/модальність - це шапка бланка, а не речення опису,
   // тому ці фрази виносяться в окремий рядок і в тіло опису не потрапляють.
   function isStudy(p) { return p.block === BL[0] && p.group === 'Проекція'; }
 
@@ -186,7 +186,7 @@
       + '<div class="sect"><h3>Опис</h3><div class="body">'
       + (d ? esc(d) : '<span class="empty">Позначте знахідки на вкладці «Опис».</span>') + '</div></div>'
       + '<div class="sect"><h3>Висновок' + (c.src ? ' <em>· ' + c.src + '</em>' : '') + '</h3>'
-      + '<div class="body">' + (c.text ? esc(c.text) : '<span class="empty">—</span>') + '</div></div>';
+      + '<div class="body">' + (c.text ? esc(c.text) : '<span class="empty">-</span>') + '</div></div>';
     updateBadges();
   }
 
