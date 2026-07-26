@@ -241,7 +241,7 @@
   });
 
   $('clear').addEventListener('click', function () {
-    if (!confirm('Зняти всі позначки — і в описі, і у висновку?')) return;
+    if (!confirm('Зняти всі позначки в описі і у висновку?')) return;
     ps = PH.map(function () { return { on: false, s: '', n1: '', n2: '' }; });
     ds = DX.map(function () { return { on: false, s: '', n1: '', n2: '' }; });
     buildList(); updatePreview();
